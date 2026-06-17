@@ -16,8 +16,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->{
                     auth.requestMatchers("/candidate/").permitAll() //deixa a rota sem precisar de autenticação
-                            .requestMatchers("/company/").permitAll(); //deixa a rota sem precisar de autenticação
-
+                            .requestMatchers("/company/").permitAll() //deixa a rota sem precisar de autenticação
+                            .requestMatchers("/auth/company").permitAll();
                     auth.anyRequest().authenticated();
                 });
         return http.build();
