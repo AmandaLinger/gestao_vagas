@@ -3,8 +3,10 @@ package br.com.amandaLinger.gestao_vagas.modules.candidate.controllers;
 import br.com.amandaLinger.gestao_vagas.exceptions.UserFoundException;
 import br.com.amandaLinger.gestao_vagas.modules.candidate.CandidateEntity;
 import br.com.amandaLinger.gestao_vagas.modules.candidate.CandidateRepository;
+import br.com.amandaLinger.gestao_vagas.modules.candidate.service.CreateCandidateUseCase;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/candidate")
 public class CandidateController {
 
-    @Autowired //fala para o spring que ele deve gerenciar
-    private CandidateRepository candidateRepository; //camando o repositorio
+    @Autowired
+    private CreateCandidateUseCase createCandidateUseCase;
 
     @PostMapping("/")
-    public CandidateEntity create( @Valid @RequestBody CandidateEntity candidateEntity ) {
-        this.candidateRepository
-                .findByUsernameOrEmail(candidateEntity.getUsername(), candidateEntity.getEmail())
-                .ifPresent((user) -> {
-                    throw new UserFoundException();
-        });
-        return this.candidateRepository.save(candidateEntity);
+    public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity ) {
+        try{
+            var result = this.createCandidateUseCase.execute(candidateEntity);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
