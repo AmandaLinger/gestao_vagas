@@ -1,0 +1,23 @@
+package br.com.amandaLinger.gestao_vagas.security;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean //o bean sobrescreve o metodo original
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth ->{
+                    auth.requestMatchers("/candidate/").permitAll() //deixa a rota sem precisar de autenticação
+                            .requestMatchers("/company/").permitAll(); //deixa a rota sem precisar de autenticação
+
+                    auth.anyRequest().authenticated();
+                });
+        return http.build();
+    }
+}
