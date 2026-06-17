@@ -32,7 +32,7 @@ public class CompanyEntity {
     @Length(min = 8, max = 100 , message = "O campo deve conter de [8] a [100] caracteres")
     private String password;
     private String website;
-    private String nome;
+    private String name;
     private String description;
 
     @CreationTimestamp
